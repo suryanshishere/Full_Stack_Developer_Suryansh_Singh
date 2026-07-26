@@ -318,9 +318,9 @@ build on every push.
 
 ## Deployment
 
-**Render** free web service (Node, region Singapore, root directory `taska`,
-build `npm ci && npm run build`, start `npm start`) + **Turso** free SQLite database
-(region Mumbai, next to the app).
+**Render** free web service (Node, region Singapore, root directory `taska`) + **Turso** free
+SQLite database (region Mumbai, next to the app). The service is declared as code in
+[`../render.yaml`](../render.yaml) and redeploys automatically on every push to `main`.
 
 Environment variables:
 
