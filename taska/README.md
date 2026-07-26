@@ -37,12 +37,18 @@ sales team could actually use.
 6. **Live dashboard** — light polling toasts "new lead just arrived" and refreshes the board when
    a public submission lands.
 7. **CSV export** — `GET /api/leads/export` honors the exact same filters as the list endpoint.
+8. **Notion-inspired interface** — a sales pipeline *is* a database with views, so the app borrows
+   that vocabulary: sidebar workspace shell, page emoji and title, Board/Table view tabs, filter
+   chips, soft pastel tag pills for status and priority, and the lead page laid out as a document
+   with a property grid, note blocks, and a quiet activity timeline. Hairline borders, ink-on-paper
+   colours, one accent. Every status colour is defined once and reused across board, table, and
+   badges so the whole product reads as one system.
 
 ## Stack
 
 Next.js 15 (App Router, TypeScript) · Prisma 6 on SQLite/libSQL (local file in dev/test, Turso in
 production) · zod validation · bcryptjs + jose (JWT session cookie) · Tailwind 4 · Vitest ·
-GitHub Actions · Vercel.
+GitHub Actions · Render.
 
 ## Run it locally
 
