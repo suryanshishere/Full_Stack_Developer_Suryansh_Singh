@@ -1,6 +1,6 @@
 {
-  "name": "taska",
-  "version": "0.1.0",
+  "name": "leadline",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -12,9 +12,6 @@
     "db:push": "prisma db push",
     "db:push:remote": "tsx scripts/push-schema.ts",
     "db:seed": "tsx prisma/seed.ts"
-  },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.8.1",

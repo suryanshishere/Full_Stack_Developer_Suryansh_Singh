@@ -2,7 +2,8 @@ node_modules/
 .next/
 out/
 build/
-dist/
+next-env.d.ts
+*.tsbuildinfo
 coverage/
 *.db
 *.db-journal
@@ -10,8 +11,7 @@ coverage/
 .env.*
 !.env.example
 .vercel/
-.turbo/
+tests/.tmp/
 *.log
 .DS_Store
 Thumbs.db
-tests/.tmp/
