@@ -320,7 +320,12 @@ build on every push.
 
 **Render** free web service (Node, region Singapore, root directory `taska`) + **Turso** free
 SQLite database (region Mumbai, next to the app). The service is declared as code in
-[`../render.yaml`](../render.yaml) and redeploys automatically on every push to `main`.
+[`../render.yaml`](../render.yaml), so it can be recreated from the repo as a Blueprint.
+
+Every push to `main` runs CI (install → schema → 40 tests → production build). Production releases
+are triggered explicitly against the Render API — the service was created from the public repo URL
+rather than through Render's GitHub App, so it receives no push webhooks. Connecting the repo in
+the Render dashboard turns on push-triggered deploys without any code change.
 
 Environment variables:
 

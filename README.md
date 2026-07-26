@@ -18,5 +18,6 @@ Demo logins — admin `admin@leadline.demo` / `Admin@1234` · member `member@lea
 **Task A docs:** architecture, API reference, demo credentials, and setup guide live in
 [taska/README.md](taska/README.md).
 
-Deployment is declared as code in [render.yaml](render.yaml); every push to `main` runs CI
-(install → schema → 40 tests → build) and redeploys the live service.
+Deployment is declared as code in [render.yaml](render.yaml). Every push to `main` runs CI
+(install → schema → 40 tests → production build); releases to the live service are triggered
+explicitly.
