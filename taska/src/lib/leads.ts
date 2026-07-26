@@ -98,6 +98,13 @@ function leadWhere(query: LeadListQuery): Prisma.LeadWhereInput {
 
 const assignedToSelect = { select: { id: true, name: true } };
 
+export async function statusCounts() {
+  const groups = await db.lead.groupBy({ by: ["status"], _count: { _all: true } });
+  const counts: Record<string, number> = {};
+  for (const group of groups) counts[group.status] = group._count._all;
+  return counts;
+}
+
 export async function listLeads(actor: Actor, query: LeadListQuery) {
   const where = leadWhere(query);
   const [total, data] = await Promise.all([
@@ -137,11 +144,12 @@ export async function getLead(actor: Actor, id: string) {
 }
 
 export async function createLead(actor: Actor, input: CreateLeadInput) {
+  let assignee: { id: string; name: string } | null = null;
   if (input.assignedToId) {
     if (actor.role !== "ADMIN" && input.assignedToId !== actor.id) {
       throw forbidden("Members can only assign new leads to themselves");
     }
-    await ensureActiveUser(input.assignedToId);
+    assignee = await ensureActiveUser(input.assignedToId);
   }
   const now = new Date();
   const score = computeScore({
@@ -176,13 +184,17 @@ export async function createLead(actor: Actor, input: CreateLeadInput) {
         meta: JSON.stringify({ source: input.source }),
       },
     });
-    if (input.assignedToId) {
+    if (assignee) {
       await tx.activity.create({
         data: {
           leadId: lead.id,
           actorId: actor.id,
           type: "ASSIGNED",
-          meta: JSON.stringify({ fromUserId: null, toUserId: input.assignedToId }),
+          meta: JSON.stringify({
+            fromUserId: null,
+            toUserId: assignee.id,
+            toUserName: assignee.name,
+          }),
         },
       });
     }
@@ -314,7 +326,7 @@ export async function updateLead(actor: Actor, id: string, input: UpdateLeadInpu
 export async function assignLead(actor: Actor, id: string, assignedToId: string | null) {
   if (actor.role !== "ADMIN") throw forbidden("Only admins can assign leads");
   const lead = await findLead(id);
-  if (assignedToId) await ensureActiveUser(assignedToId);
+  const target = assignedToId ? await ensureActiveUser(assignedToId) : null;
   if (lead.assignedToId === assignedToId) {
     return db.lead.findUniqueOrThrow({ where: { id }, include: { assignedTo: assignedToSelect } });
   }
@@ -329,7 +341,11 @@ export async function assignLead(actor: Actor, id: string, assignedToId: string 
         leadId: id,
         actorId: actor.id,
         type: assignedToId ? "ASSIGNED" : "UNASSIGNED",
-        meta: JSON.stringify({ fromUserId: lead.assignedToId, toUserId: assignedToId }),
+        meta: JSON.stringify({
+          fromUserId: lead.assignedToId,
+          toUserId: assignedToId,
+          toUserName: target?.name ?? null,
+        }),
       },
     });
     return updated;

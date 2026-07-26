@@ -272,7 +272,7 @@ async function main() {
     },
   });
 
-  const users: Record<MemberKey, { id: string }> = { admin, rohan, mia };
+  const users: Record<MemberKey, { id: string; name: string }> = { admin, rohan, mia };
 
   for (const seed of SEED_LEADS) {
     const createdAt = daysAgo(seed.createdDays);
@@ -289,7 +289,7 @@ async function main() {
       events.push({
         type: "ASSIGNED",
         actorId: admin.id,
-        meta: { fromUserId: null, toUserId: assignee.id },
+        meta: { fromUserId: null, toUserId: assignee.id, toUserName: assignee.name },
       });
     }
     let previousStatus = "NEW";
