@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String
+  email         String     @unique
+  passwordHash  String
+  role          String     @default("MEMBER")
+  isActive      Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  assignedLeads Lead[]     @relation("AssignedLeads")
+  notes         Note[]
+  activities    Activity[]
+}
+
+model Lead {
+  id             String     @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  company        String?
+  message        String?
+  source         String     @default("MANUAL")
+  status         String     @default("NEW")
+  priority       String     @default("MEDIUM")
+  value          Int?
+  score          Int        @default(0)
+  nextFollowUpAt DateTime?
+  lostReason     String?
+  lastActivityAt DateTime   @default(now())
+  assignedToId   String?
+  assignedTo     User?      @relation("AssignedLeads", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  notes          Note[]
+  activities     Activity[]
+
+  @@index([status, assignedToId])
+  @@index([lastActivityAt])
+  @@index([score])
+  @@index([createdAt])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  body      String
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([leadId])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  type      String
+  meta      String   @default("{}")
+  leadId    String
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([leadId, createdAt])
+}
