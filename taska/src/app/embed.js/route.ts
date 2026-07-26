@@ -1,7 +1,11 @@
 import { withErrors } from "@/lib/api";
 
 export const GET = withErrors(async (req) => {
-  const origin = new URL(req.url).origin;
+  const host =
+    req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? new URL(req.url).host;
+  const forwardedProto = req.headers.get("x-forwarded-proto");
+  const proto = forwardedProto ?? (host.startsWith("localhost") ? "http" : "https");
+  const origin = `${proto}://${host}`;
   const script = [
     "(function(){",
     "var anchor=document.currentScript;",

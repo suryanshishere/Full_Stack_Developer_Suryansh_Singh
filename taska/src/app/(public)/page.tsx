@@ -3,8 +3,10 @@ import { headers } from "next/headers";
 import { CaptureForm } from "@/components/CaptureForm";
 
 export default async function LandingPage() {
-  const host = (await headers()).get("host") ?? "your-domain";
-  const protocol = host.startsWith("localhost") ? "http" : "https";
+  const headerList = await headers();
+  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "your-domain";
+  const protocol =
+    headerList.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const snippet = `<script src="${protocol}://${host}/embed.js" async></script>`;
 
   return (

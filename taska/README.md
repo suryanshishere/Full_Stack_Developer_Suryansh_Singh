@@ -3,8 +3,10 @@
 Task A of the Digital Heroes Full Stack Development brief: a lead management application a small
 sales team could actually use.
 
-**Live app:** _added after deployment_
-**Repo root:** [../README.md](../README.md)
+**Live app: https://leadline-feen.onrender.com** · **Repo root:** [../README.md](../README.md)
+
+> Free-tier hosting sleeps after ~15 minutes idle — the first request may take 30–50 seconds to
+> wake the instance. Everything after that is normal speed.
 
 | Demo account | Email | Password | What to try |
 |---|---|---|---|
@@ -316,19 +318,32 @@ build on every push.
 
 ## Deployment
 
-Vercel (app, root directory `taska`) + Turso (SQLite at the edge, free tier).
+**Render** free web service (Node, region Singapore, root directory `taska`,
+build `npm ci && npm run build`, start `npm start`) + **Turso** free SQLite database
+(region Mumbai, next to the app).
 
 Environment variables:
 
 | Name | Purpose |
 |---|---|
 | `AUTH_SECRET` | JWT signing secret (any long random string) |
-| `TURSO_DATABASE_URL` | `libsql://…` — presence switches Prisma to the libSQL adapter |
+| `TURSO_DATABASE_URL` | `libsql://…` — its presence switches Prisma to the libSQL adapter |
 | `TURSO_AUTH_TOKEN` | Turso database token |
-| `DATABASE_URL` | only used locally (`file:./dev.db`) |
+| `DATABASE_URL` | local development and tests only (`file:./dev.db`) |
 
-First deploy: `npx prisma db push` + `npm run db:seed` executed once against Turso by exporting
-the two `TURSO_*` variables locally.
+One-time database setup, run locally with the two `TURSO_*` variables exported:
+
+```bash
+npm run db:push:remote   # applies the Prisma schema DDL over libSQL
+npm run db:seed          # loads the demo team and pipeline
+```
+
+`prisma db push` speaks the SQLite file protocol, not `libsql://`, so
+[`scripts/push-schema.ts`](scripts/push-schema.ts) generates the identical DDL with
+`prisma migrate diff` and executes it through the libSQL client — same schema, one extra hop.
+
+Free-tier tradeoff, stated plainly: the instance sleeps after ~15 minutes idle and takes 30–50
+seconds to wake on the next request. The app itself is stateless, so nothing is lost on sleep.
 
 ## Assumptions & scope decisions
 
