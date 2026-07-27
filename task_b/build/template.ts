@@ -43,15 +43,15 @@ export function renderPage(options: {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${current.title} · Crateful handover</title>
+    <title>${current.title} · Task B</title>
     <meta name="description" content="${current.subtitle}" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <input type="checkbox" id="nav-toggle" hidden />
     <aside class="sidebar">
-      <a class="workspace" href="index.html">📦 Crateful handover</a>
-      <p class="workspace-note">Task B · inherit and improve</p>
+      <a class="workspace" href="index.html">📦 Task B</a>
+      <p class="workspace-note">Inherit and improve</p>
       <ul class="nav">
         ${navigation(pages, current)}
       </ul>
@@ -62,7 +62,7 @@ export function renderPage(options: {
     <div class="shell">
       <header class="topbar">
         <label for="nav-toggle" class="nav-button" aria-label="Toggle navigation">☰</label>
-        <span>📦 Crateful handover</span>
+        <span>📦 Task B</span>
       </header>
       <main>
         <article>

@@ -1,19 +1,14 @@
-# 📦 Crateful handover — Task B
+# Task B — Inherit and improve
 
-Inheriting a working but badly built codebase that serves real customers and cannot go down:
-an assessment, a phased migration plan, a worked refactor, and an engineering standards proposal.
+Inheriting a working but badly built codebase that serves real customers and cannot go down.
 
 **Live: https://crateful-handover.onrender.com**
 
-Written as an internal memo from a new senior engineer in week two at *Crateful*, a fictional
-direct-to-consumer coffee subscription — £320k monthly recurring revenue, 11,000 subscribers,
-four engineers, six years of code, no tests, and live payment keys in the repository.
-
 | Document | What it covers |
 |---|---|
-| [Assessment](docs/01-assessment.md) | Nine findings ranked by expected harm, the cost of leaving each one, and the risk of the fix itself |
-| [Migration plan](docs/02-migration-plan.md) | Week 1, month 1 and quarter 1 — every step shippable and reversible, no big-bang, no code freeze |
-| [The refactor](docs/03-refactor.md) | One handler rebuilt, with characterization tests proving behaviour survived and six defects did not |
+| [Assessment](docs/01-assessment.md) | Nine findings ranked by harm, the cost of leaving each one, and the risk of the fix |
+| [Migration plan](docs/02-migration-plan.md) | Week 1, month 1, quarter 1 — every step shippable and reversible |
+| [The refactor](docs/03-refactor.md) | One handler rebuilt, with tests proving the behaviour survived and six defects did not |
 | [Standards](docs/04-standards.md) | Ten machine-enforced rules, and how to get a resistant team to adopt them |
 
 ## The refactor runs
@@ -23,12 +18,11 @@ npm install
 npm test
 ```
 
-29 tests, no database and no network. Eight of them run against **both** the old and the new
-implementation to show that a customer using the feature correctly cannot tell the difference —
-that is what makes it a refactor rather than a rewrite. The other thirteen demonstrate the defects
-the refactor removed: a missing ownership check, SQL string concatenation, an unvalidated plan
-producing a `NaN` charge, a payment failure leaving the database ahead of billing, a retry
-double-charging, and a response leaking internal columns.
+29 tests, no database and no network. Eight run against **both** the old and new implementation to
+show a customer cannot tell the difference — that is what makes it a refactor. The rest demonstrate
+the defects removed: no ownership check, SQL string concatenation, an unvalidated plan producing a
+`NaN` charge, a payment failure leaving the database ahead of billing, a retry double-charging, and
+a response leaking internal columns.
 
 ```
 refactor/
@@ -46,5 +40,5 @@ refactor/
 npm run build     # docs/*.md -> dist/
 ```
 
-The four documents are Markdown, and [`build/build.ts`](build/build.ts) renders them into the
-static site so there is one source of truth rather than a copy that drifts.
+The four documents are Markdown; [`build/build.ts`](build/build.ts) renders them into the static
+site, so there is one source of truth rather than a copy that drifts.
