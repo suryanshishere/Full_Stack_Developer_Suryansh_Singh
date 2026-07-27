@@ -1,4 +1,4 @@
-import { Credit } from "@/components/Credit";
+import { Credit } from "@/client/Credit";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

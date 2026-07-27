@@ -1,5 +1,5 @@
-import { json, loginSchema, parseBody, unauthorized, withErrors } from "@/lib/api";
-import { createSessionToken, sanitizeUser, sessionCookie, verifyCredentials } from "@/lib/auth";
+import { json, loginSchema, parseBody, unauthorized, withErrors } from "@/server/http";
+import { createSessionToken, sanitizeUser, sessionCookie, verifyCredentials } from "@/server/auth";
 
 export const POST = withErrors(async (req) => {
   const { email, password } = await parseBody(req, loginSchema);

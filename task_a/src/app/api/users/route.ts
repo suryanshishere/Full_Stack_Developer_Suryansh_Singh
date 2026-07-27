@@ -1,5 +1,5 @@
-import { createUserSchema, json, parseBody, withErrors } from "@/lib/api";
-import { createUser, listUsers, requireActor } from "@/lib/auth";
+import { createUserSchema, json, parseBody, withErrors } from "@/server/http";
+import { createUser, listUsers, requireActor } from "@/server/auth";
 
 export const GET = withErrors(async (req) => {
   const actor = await requireActor(req);

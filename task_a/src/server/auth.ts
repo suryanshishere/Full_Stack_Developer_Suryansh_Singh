@@ -9,7 +9,7 @@ import {
   unprocessable,
   type CreateUserInput,
   type Role,
-} from "./api";
+} from "./http";
 
 export const SESSION_COOKIE = "leadline_session";
 const SESSION_DAYS = 7;

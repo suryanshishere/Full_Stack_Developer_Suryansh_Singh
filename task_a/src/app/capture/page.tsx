@@ -1,6 +1,6 @@
-import { CaptureForm } from "@/components/CaptureForm";
+import { CaptureForm } from "@/client/CaptureForm";
 
-export const metadata = { title: "Contact us · Leadline" };
+export const metadata = { title: "Contact us Â· Leadline" };
 
 export default function CapturePage() {
   return (
@@ -9,7 +9,7 @@ export default function CapturePage() {
       <p className="mt-1 mb-4 text-sm text-sub">We usually reply within one business day.</p>
       <CaptureForm />
       <p className="mt-4 text-center text-xs text-faint">
-        Powered by ⚡ Leadline ·{" "}
+        Powered by âš¡ Leadline Â·{" "}
         <a
           href="https://digitalheroesco.com"
           target="_blank"

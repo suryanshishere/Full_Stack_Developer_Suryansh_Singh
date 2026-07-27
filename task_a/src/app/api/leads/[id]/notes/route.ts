@@ -1,6 +1,6 @@
-import { createNoteSchema, json, parseBody, withErrors } from "@/lib/api";
-import { requireActor } from "@/lib/auth";
-import { addNote, listNotes } from "@/lib/leads";
+import { createNoteSchema, json, parseBody, withErrors } from "@/server/http";
+import { requireActor } from "@/server/auth";
+import { addNote, listNotes } from "@/server/leads";
 
 type Ctx = { params: Promise<{ id: string }> };
 

@@ -11,7 +11,7 @@ import {
   STATUS_META,
   formatMoney,
   isOverdue,
-} from "./badges";
+} from "./ui";
 
 export type BoardLead = {
   id: string;
@@ -73,7 +73,7 @@ export function Board({ leads, role, userId, transitions }: BoardProps) {
       const body = await res.json().catch(() => ({}));
       const allowed = body.details?.allowedNextStatuses as string[] | undefined;
       showToast(
-        `${body.error ?? "Move failed"}${allowed?.length ? ` · Allowed next: ${allowed.join(", ")}` : ""}`
+        `${body.error ?? "Move failed"}${allowed?.length ? ` Â· Allowed next: ${allowed.join(", ")}` : ""}`
       );
       return;
     }

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getPageActor } from "@/lib/auth";
-import { allowedTransitions, listLeads, statusCounts } from "@/lib/leads";
-import { leadListQuerySchema, STATUSES, type LeadListQuery, type LeadStatus } from "@/lib/api";
-import { Board, type BoardLead } from "@/components/Board";
-import { LiveToast } from "@/components/LiveToast";
-import { QuickAdd } from "@/components/QuickAdd";
+import { getPageActor } from "@/server/auth";
+import { listLeads, statusCounts } from "@/server/leads";
+import { allowedTransitions } from "@/server/pipeline";
+import { leadListQuerySchema, STATUSES, type LeadListQuery, type LeadStatus } from "@/server/http";
+import { Board, type BoardLead } from "@/client/Board";
+import { LiveToast } from "@/client/LiveToast";
+import { QuickAdd } from "@/client/QuickAdd";
 import {
   OverdueBadge,
   PriorityBadge,
@@ -16,9 +17,9 @@ import {
   isOverdue,
   shortDate,
   timeAgo,
-} from "@/components/badges";
+} from "@/client/ui";
 
-export const metadata = { title: "Leads · Leadline" };
+export const metadata = { title: "Leads Â· Leadline" };
 
 type Search = Record<string, string | string[] | undefined>;
 
@@ -78,7 +79,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
 
   const sortOptions = [
     { label: "Newest", sort: "createdAt", order: "desc" },
-    { label: "🔥 Hottest", sort: "score", order: "desc" },
+    { label: "ðŸ”¥ Hottest", sort: "score", order: "desc" },
     { label: "Biggest", sort: "value", order: "desc" },
     { label: "Stalest", sort: "lastActivityAt", order: "asc" },
   ];
@@ -87,14 +88,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     <div className="mx-auto max-w-7xl">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">📋 Leads</h1>
+          <h1 className="text-2xl font-bold">ðŸ“‹ Leads</h1>
           <p className="mt-1 text-sm text-sub">
-            {totalAll} in pipeline · {counts.WON ?? 0} won · {counts.LOST ?? 0} lost
+            {totalAll} in pipeline Â· {counts.WON ?? 0} won Â· {counts.LOST ?? 0} lost
           </p>
         </div>
         <div className="flex items-center gap-2">
           <a href={exportHref} className="rounded-md border border-line px-3 py-1.5 text-sm hover:bg-wash">
-            ⬇️ CSV
+            â¬‡ï¸ CSV
           </a>
           <QuickAdd userId={actor.id} />
         </div>
@@ -157,7 +158,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <input
               name="q"
               defaultValue={query.q ?? ""}
-              placeholder="Search name, email, company…"
+              placeholder="Search name, email, companyâ€¦"
               className="w-56 rounded-md border border-line bg-paper px-2.5 py-1 text-xs"
             />
           </form>
@@ -181,7 +182,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <div className="mt-5">
         {totalAll === 0 ? (
           <div className="rounded-lg border border-dashed border-line p-12 text-center">
-            <div className="text-3xl">🌱</div>
+            <div className="text-3xl">ðŸŒ±</div>
             <h2 className="mt-3 font-semibold">No leads yet</h2>
             <p className="mt-1 text-sm text-sub">
               Share the <Link href="/" className="underline">capture form</Link> or add one manually to
@@ -224,7 +225,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                       <ScoreChip score={lead.score} />
                     </td>
                     <td className="px-3 py-2.5">{formatMoney(lead.value)}</td>
-                    <td className="px-3 py-2.5 text-sub">{lead.assignedTo?.name ?? "—"}</td>
+                    <td className="px-3 py-2.5 text-sub">{lead.assignedTo?.name ?? "â€”"}</td>
                     <td className="px-3 py-2.5 text-sub">{timeAgo(lead.lastActivityAt)}</td>
                     <td className="px-3 py-2.5">
                       {isOverdue(lead.nextFollowUpAt, lead.status) ? (
@@ -251,7 +252,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {view === "table" && result.meta.totalPages > 1 && (
         <div className="mt-4 flex items-center justify-between text-sm">
           <span className="text-sub">
-            Page {result.meta.page} of {result.meta.totalPages} · {result.meta.total} leads
+            Page {result.meta.page} of {result.meta.totalPages} Â· {result.meta.total} leads
           </span>
           <div className="flex gap-2">
             {result.meta.page > 1 && (
@@ -259,7 +260,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 href={href({ view: "table", page: String(result.meta.page - 1) })}
                 className="rounded-md border border-line px-3 py-1.5 hover:bg-wash"
               >
-                ← Prev
+                â† Prev
               </Link>
             )}
             {result.meta.page < result.meta.totalPages && (
@@ -267,7 +268,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 href={href({ view: "table", page: String(result.meta.page + 1) })}
                 className="rounded-md border border-line px-3 py-1.5 hover:bg-wash"
               >
-                Next →
+                Next â†’
               </Link>
             )}
           </div>

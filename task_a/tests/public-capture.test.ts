@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { db } from "@/lib/db";
+import { db } from "@/server/db";
 import { POST as publicCapture } from "@/app/api/public/leads/route";
 import { jsonRequest, resetDb } from "./helpers";
 

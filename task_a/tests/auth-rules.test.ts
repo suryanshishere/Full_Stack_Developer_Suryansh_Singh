@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { db } from "@/lib/db";
-import { createSessionToken, SESSION_COOKIE } from "@/lib/auth";
+import { db } from "@/server/db";
+import { createSessionToken, SESSION_COOKIE } from "@/server/auth";
 import { POST as login } from "@/app/api/auth/login/route";
 import { POST as logout } from "@/app/api/auth/logout/route";
 import { GET as me } from "@/app/api/auth/me/route";

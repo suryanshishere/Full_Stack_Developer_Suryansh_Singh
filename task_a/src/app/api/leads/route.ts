@@ -5,9 +5,9 @@ import {
   parseBody,
   parseQuery,
   withErrors,
-} from "@/lib/api";
-import { requireActor } from "@/lib/auth";
-import { createLead, listLeads } from "@/lib/leads";
+} from "@/server/http";
+import { requireActor } from "@/server/auth";
+import { createLead, listLeads } from "@/server/leads";
 
 export const GET = withErrors(async (req) => {
   const actor = await requireActor(req);

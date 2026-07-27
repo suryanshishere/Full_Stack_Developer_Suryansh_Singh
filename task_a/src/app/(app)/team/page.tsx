@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import { getPageActor, listUsers } from "@/lib/auth";
-import { CreateUserForm, ToggleActiveButton } from "@/components/UserForm";
+import { getPageActor, listUsers } from "@/server/auth";
+import { CreateUserForm, ToggleActiveButton } from "@/client/UserForm";
 
-export const metadata = { title: "Team · Leadline" };
+export const metadata = { title: "Team Â· Leadline" };
 
 export default async function TeamPage() {
   const actor = await getPageActor();
@@ -13,7 +13,7 @@ export default async function TeamPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <h1 className="text-2xl font-bold">👥 Team</h1>
+      <h1 className="text-2xl font-bold">ðŸ‘¥ Team</h1>
       <p className="mt-1 text-sm text-sub">
         Invite teammates and control access. Deactivated members keep their history but cannot sign
         in, and their leads can be reassigned.

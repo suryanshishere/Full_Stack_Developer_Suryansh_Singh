@@ -1,6 +1,6 @@
-import { leadListQuerySchema, parseQuery, withErrors } from "@/lib/api";
-import { requireActor } from "@/lib/auth";
-import { exportLeadsCsv } from "@/lib/leads";
+import { leadListQuerySchema, parseQuery, withErrors } from "@/server/http";
+import { requireActor } from "@/server/auth";
+import { exportLeadsCsv } from "@/server/leads";
 
 export const GET = withErrors(async (req) => {
   const actor = await requireActor(req);

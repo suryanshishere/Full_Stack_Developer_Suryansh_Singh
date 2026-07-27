@@ -1,6 +1,6 @@
-import { json, withErrors } from "@/lib/api";
-import { requireActor } from "@/lib/auth";
-import { listActivities } from "@/lib/leads";
+import { json, withErrors } from "@/server/http";
+import { requireActor } from "@/server/auth";
+import { listActivities } from "@/server/leads";
 
 type Ctx = { params: Promise<{ id: string }> };
 

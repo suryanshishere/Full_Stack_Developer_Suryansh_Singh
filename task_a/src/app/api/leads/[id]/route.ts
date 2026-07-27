@@ -1,6 +1,6 @@
-import { json, parseBody, updateLeadSchema, withErrors } from "@/lib/api";
-import { requireActor } from "@/lib/auth";
-import { deleteLead, getLead, updateLead } from "@/lib/leads";
+import { json, parseBody, updateLeadSchema, withErrors } from "@/server/http";
+import { requireActor } from "@/server/auth";
+import { deleteLead, getLead, updateLead } from "@/server/leads";
 
 type Ctx = { params: Promise<{ id: string }> };
 

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { getPageActor, listUsers } from "@/lib/auth";
-import { allowedTransitions, getLead, listActivities } from "@/lib/leads";
-import type { LeadStatus } from "@/lib/api";
-import { LeadActions } from "@/components/LeadActions";
+import { getPageActor, listUsers } from "@/server/auth";
+import { getLead, listActivities } from "@/server/leads";
+import { allowedTransitions } from "@/server/pipeline";
+import type { LeadStatus } from "@/server/http";
+import { LeadActions } from "@/client/LeadActions";
 import {
   OverdueBadge,
   PriorityBadge,
@@ -13,7 +14,7 @@ import {
   isOverdue,
   shortDate,
   timeAgo,
-} from "@/components/badges";
+} from "@/client/ui";
 
 export const metadata = { title: "Lead · Leadline" };
 

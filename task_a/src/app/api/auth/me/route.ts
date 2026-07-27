@@ -1,5 +1,5 @@
-import { json, withErrors } from "@/lib/api";
-import { requireActor } from "@/lib/auth";
+import { json, withErrors } from "@/server/http";
+import { requireActor } from "@/server/auth";
 
 export const GET = withErrors(async (req) => {
   const actor = await requireActor(req);

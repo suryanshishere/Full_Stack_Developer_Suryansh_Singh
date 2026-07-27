@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { hashPassword } from "@/lib/auth";
+import { db } from "@/server/db";
+import { hashPassword } from "@/server/auth";
 import { POST as loginRoute } from "@/app/api/auth/login/route";
 
 export const TEST_PASSWORD = "Password#1";

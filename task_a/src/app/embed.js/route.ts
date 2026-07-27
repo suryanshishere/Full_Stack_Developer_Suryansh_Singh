@@ -1,4 +1,4 @@
-import { withErrors } from "@/lib/api";
+import { withErrors } from "@/server/http";
 
 export const GET = withErrors(async (req) => {
   const host =

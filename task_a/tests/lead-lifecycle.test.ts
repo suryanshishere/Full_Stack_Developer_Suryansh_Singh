@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { db } from "@/lib/db";
+import { db } from "@/server/db";
 import { GET as listLeadsRoute, POST as createLeadRoute } from "@/app/api/leads/route";
 import { PATCH as patchLeadRoute } from "@/app/api/leads/[id]/route";
 import { PATCH as assignRoute } from "@/app/api/leads/[id]/assign/route";

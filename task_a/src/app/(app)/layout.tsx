@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getPageActor } from "@/lib/auth";
-import { Credit } from "@/components/Credit";
-import { LogoutButton } from "@/components/LoginForm";
+import { getPageActor } from "@/server/auth";
+import { Credit } from "@/client/Credit";
+import { LogoutButton } from "@/client/LoginForm";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const actor = await getPageActor();
@@ -13,18 +13,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="min-h-screen bg-paper">
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-line bg-canvas md:flex">
-        <div className="px-4 pt-4 pb-2 text-sm font-semibold">⚡ Leadline</div>
+        <div className="px-4 pt-4 pb-2 text-sm font-semibold">âš¡ Leadline</div>
         <nav className="flex-1 space-y-0.5 px-2 py-2 text-sm text-ink">
           <Link href="/dashboard" className={navLink}>
-            📋 Leads
+            ðŸ“‹ Leads
           </Link>
           {actor.role === "ADMIN" && (
             <Link href="/team" className={navLink}>
-              👥 Team
+              ðŸ‘¥ Team
             </Link>
           )}
           <Link href="/" className={navLink}>
-            🌐 Public site
+            ðŸŒ Public site
           </Link>
         </nav>
         <div className="space-y-2 border-t border-line p-3">
@@ -45,7 +45,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
       <div className="flex min-h-screen flex-col md:pl-60">
         <header className="flex items-center justify-between border-b border-line px-4 py-3 md:hidden">
-          <span className="text-sm font-semibold">⚡ Leadline</span>
+          <span className="text-sm font-semibold">âš¡ Leadline</span>
           <nav className="flex items-center gap-3 text-sm">
             <Link href="/dashboard" className="hover:underline">
               Leads

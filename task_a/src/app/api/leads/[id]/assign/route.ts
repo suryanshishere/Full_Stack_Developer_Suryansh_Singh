@@ -1,6 +1,6 @@
-import { assignLeadSchema, json, parseBody, withErrors } from "@/lib/api";
-import { requireActor } from "@/lib/auth";
-import { assignLead } from "@/lib/leads";
+import { assignLeadSchema, json, parseBody, withErrors } from "@/server/http";
+import { requireActor } from "@/server/auth";
+import { assignLead } from "@/server/leads";
 
 type Ctx = { params: Promise<{ id: string }> };
 

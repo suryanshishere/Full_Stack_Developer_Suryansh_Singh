@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { STATUS_META } from "./badges";
+import { STATUS_META } from "./ui";
 
 type ActionLead = {
   id: string;
@@ -46,7 +46,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       const allowed = data.details?.allowedNextStatuses as string[] | undefined;
-      setError(`${data.error ?? "Request failed"}${allowed?.length ? ` · Allowed: ${allowed.join(", ")}` : ""}`);
+      setError(`${data.error ?? "Request failed"}${allowed?.length ? ` Â· Allowed: ${allowed.join(", ")}` : ""}`);
       return false;
     }
     router.refresh();
@@ -76,7 +76,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
           <div className="mt-2 flex flex-wrap gap-2">
             {allowedNext.length === 0 && (
               <span className="text-sm text-faint">
-                {role === "ADMIN" ? "No further moves from here." : "This lead is closed — only an admin can reopen it."}
+                {role === "ADMIN" ? "No further moves from here." : "This lead is closed â€” only an admin can reopen it."}
               </span>
             )}
             {allowedNext.map((status) => (
@@ -116,7 +116,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
         </section>
       ) : (
         <p className="text-sm text-sub">
-          Viewing only — this lead is assigned to {lead.assignedTo?.name ?? "no one"}. Only they or an
+          Viewing only â€” this lead is assigned to {lead.assignedTo?.name ?? "no one"}. Only they or an
           admin can modify it.
         </p>
       )}
@@ -157,7 +157,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
               </select>
             </label>
             <label className="text-xs text-sub">
-              Deal value (₹)
+              Deal value (â‚¹)
               <input
                 type="number"
                 min={0}
@@ -200,7 +200,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
               value={note}
               onChange={(event) => setNote(event.target.value)}
               rows={2}
-              placeholder="Call summary, next steps, anything the team should know…"
+              placeholder="Call summary, next steps, anything the team should knowâ€¦"
               className={inputClass}
             />
             <button

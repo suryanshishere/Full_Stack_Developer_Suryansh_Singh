@@ -1,5 +1,5 @@
-import { json, parseBody, updateUserSchema, withErrors } from "@/lib/api";
-import { requireActor, setUserActive } from "@/lib/auth";
+import { json, parseBody, updateUserSchema, withErrors } from "@/server/http";
+import { requireActor, setUserActive } from "@/server/auth";
 
 type Ctx = { params: Promise<{ id: string }> };
 

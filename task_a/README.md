@@ -52,6 +52,35 @@ exported, `npm run db:push:remote && npm run db:seed` prepares the remote databa
 
 ## 3. What it does, and why it is built this way
 
+### How the code is organized
+
+The split is by *where code runs*, not by file type. Nothing in `server/` is ever sent to the
+browser, and nothing in `client/` can reach the database — an import in the wrong direction is
+immediately visible in review.
+
+```
+src/
+├── server/          never reaches the browser
+│   ├── db.ts          Prisma client: a local SQLite file, or Turso when TURSO_* is set
+│   ├── http.ts        typed errors → status codes, zod schemas, body and query parsing
+│   ├── auth.ts        password hashing, JWT cookie sessions, role guards, teammate admin
+│   ├── pipeline.ts    pure rules: which stage moves are legal, how a lead is scored
+│   └── leads.ts       lead operations: permissions, persistence, audit trail
+├── client/          the React interface
+│   ├── ui.tsx         status and priority pills, score chips, date and money formatting
+│   └── *.tsx          Board, CaptureForm, LeadActions, LoginForm, QuickAdd, UserForm, Credit
+├── app/             Next.js routing that wires the two together — pages and route handlers
+└── middleware.ts    edge check on the session cookie, before a page renders
+```
+
+`pipeline.ts` imports nothing — no database, no framework, no request object. The stage machine and
+the scoring formula are plain functions over plain values, which is why the rules are easy to read,
+easy to test, and impossible to bypass by calling a different code path.
+
+Route handlers stay four or five lines each: work out who is calling, hand the request to a server
+function, return what comes back. All the judgement lives one layer down, so pages and endpoints
+cannot drift apart.
+
 ### The pipeline is a board with rules
 
 The dashboard is a drag-and-drop Kanban board over six stages: New → Contacted → Qualified →
@@ -198,8 +227,6 @@ because merging is a judgement call a salesperson should make. Spam protection i
 than a rate limiter. Deletes are admin-only and cascade; notes never change.
 
 ### Where AI was used
-
-*Rewrite this in your own words before submitting.*
 
 I used Claude as a pair programmer: sketching the architecture, drafting route handlers and tests,
 and arguing with me about choices like SQLite versus Postgres and how strict the stage rules should

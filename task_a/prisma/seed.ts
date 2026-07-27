@@ -1,6 +1,6 @@
-import { db } from "../src/lib/db";
-import { hashPassword } from "../src/lib/auth";
-import { computeScore } from "../src/lib/leads";
+import { db } from "../src/server/db";
+import { hashPassword } from "../src/server/auth";
+import { computeScore } from "../src/server/pipeline";
 
 type MemberKey = "admin" | "rohan" | "mia";
 
