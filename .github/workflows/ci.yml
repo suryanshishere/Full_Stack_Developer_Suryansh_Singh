@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  test-and-build:
+  task-a:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,5 +23,22 @@ jobs:
           cache-dependency-path: task_a/package-lock.json
       - run: npm ci
       - run: npx prisma db push --skip-generate
+      - run: npm test
+      - run: npm run build
+
+  task-b:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: task_b
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: task_b/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
       - run: npm test
       - run: npm run build
