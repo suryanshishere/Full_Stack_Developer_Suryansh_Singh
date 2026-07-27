@@ -5,6 +5,15 @@ import { listLeads, statusCounts } from "@/server/leads";
 import { allowedTransitions } from "@/server/pipeline";
 import { leadListQuerySchema, STATUSES, type LeadListQuery, type LeadStatus } from "@/server/http";
 import { Board, type BoardLead } from "@/client/Board";
+import {
+  ArrowLeftIcon,
+  ArrowRightIcon,
+  DownloadIcon,
+  FlameIcon,
+  type Icon,
+  InboxIcon,
+  ListIcon,
+} from "@/client/icons";
 import { LiveToast } from "@/client/LiveToast";
 import { QuickAdd } from "@/client/QuickAdd";
 import {
@@ -19,7 +28,7 @@ import {
   timeAgo,
 } from "@/client/ui";
 
-export const metadata = { title: "Leads Â· Leadline" };
+export const metadata = { title: "Leads · Leadline" };
 
 type Search = Record<string, string | string[] | undefined>;
 
@@ -73,13 +82,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const exportHref = `/api/leads/export${exportParams.toString() ? `?${exportParams}` : ""}`;
 
   const chip = (active: boolean) =>
-    `rounded-md border px-2.5 py-1 text-xs transition-colors ${
+    `inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs transition-colors ${
       active ? "border-ink bg-ink text-paper" : "border-line text-sub hover:bg-wash"
     }`;
 
-  const sortOptions = [
+  const sortOptions: { label: string; sort: string; order: string; Icon?: Icon }[] = [
     { label: "Newest", sort: "createdAt", order: "desc" },
-    { label: "ðŸ”¥ Hottest", sort: "score", order: "desc" },
+    { label: "Hottest", sort: "score", order: "desc", Icon: FlameIcon },
     { label: "Biggest", sort: "value", order: "desc" },
     { label: "Stalest", sort: "lastActivityAt", order: "asc" },
   ];
@@ -88,14 +97,21 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     <div className="mx-auto max-w-7xl">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold">ðŸ“‹ Leads</h1>
+          <h1 className="flex items-center gap-2.5 text-2xl font-bold">
+            <ListIcon className="h-6 w-6 text-sub" strokeWidth={1.5} />
+            Leads
+          </h1>
           <p className="mt-1 text-sm text-sub">
-            {totalAll} in pipeline Â· {counts.WON ?? 0} won Â· {counts.LOST ?? 0} lost
+            {totalAll} in pipeline · {counts.WON ?? 0} won · {counts.LOST ?? 0} lost
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <a href={exportHref} className="rounded-md border border-line px-3 py-1.5 text-sm hover:bg-wash">
-            â¬‡ï¸ CSV
+          <a
+            href={exportHref}
+            className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 text-sm hover:bg-wash"
+          >
+            <DownloadIcon className="h-4 w-4 text-sub" />
+            CSV
           </a>
           <QuickAdd userId={actor.id} />
         </div>
@@ -106,11 +122,15 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <Link href={href({ status: undefined })} className={chip(!query.status)}>
             All {totalAll}
           </Link>
-          {STATUSES.map((status) => (
-            <Link key={status} href={href({ status })} className={chip(query.status === status)}>
-              {STATUS_META[status].emoji} {STATUS_META[status].label} {counts[status] ?? 0}
-            </Link>
-          ))}
+          {STATUSES.map((status) => {
+            const StatusIcon = STATUS_META[status].Icon;
+            return (
+              <Link key={status} href={href({ status })} className={chip(query.status === status)}>
+                <StatusIcon className="h-3.5 w-3.5" />
+                {STATUS_META[status].label} {counts[status] ?? 0}
+              </Link>
+            );
+          })}
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5">
@@ -139,12 +159,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             ))}
           </div>
           <div className="flex items-center gap-1.5">
-            {sortOptions.map((option) => (
+            {sortOptions.map(({ Icon: SortIcon, ...option }) => (
               <Link
                 key={option.label}
                 href={href({ sort: option.sort, order: option.order })}
                 className={chip(query.sort === option.sort && query.order === option.order)}
               >
+                {SortIcon && <SortIcon className="h-3.5 w-3.5" />}
                 {option.label}
               </Link>
             ))}
@@ -158,7 +179,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <input
               name="q"
               defaultValue={query.q ?? ""}
-              placeholder="Search name, email, companyâ€¦"
+              placeholder="Search name, email, company…"
               className="w-56 rounded-md border border-line bg-paper px-2.5 py-1 text-xs"
             />
           </form>
@@ -182,7 +203,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       <div className="mt-5">
         {totalAll === 0 ? (
           <div className="rounded-lg border border-dashed border-line p-12 text-center">
-            <div className="text-3xl">ðŸŒ±</div>
+            <InboxIcon className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
             <h2 className="mt-3 font-semibold">No leads yet</h2>
             <p className="mt-1 text-sm text-sub">
               Share the <Link href="/" className="underline">capture form</Link> or add one manually to
@@ -225,7 +246,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                       <ScoreChip score={lead.score} />
                     </td>
                     <td className="px-3 py-2.5">{formatMoney(lead.value)}</td>
-                    <td className="px-3 py-2.5 text-sub">{lead.assignedTo?.name ?? "â€”"}</td>
+                    <td className="px-3 py-2.5 text-sub">{lead.assignedTo?.name ?? "—"}</td>
                     <td className="px-3 py-2.5 text-sub">{timeAgo(lead.lastActivityAt)}</td>
                     <td className="px-3 py-2.5">
                       {isOverdue(lead.nextFollowUpAt, lead.status) ? (
@@ -252,23 +273,25 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {view === "table" && result.meta.totalPages > 1 && (
         <div className="mt-4 flex items-center justify-between text-sm">
           <span className="text-sub">
-            Page {result.meta.page} of {result.meta.totalPages} Â· {result.meta.total} leads
+            Page {result.meta.page} of {result.meta.totalPages} · {result.meta.total} leads
           </span>
           <div className="flex gap-2">
             {result.meta.page > 1 && (
               <Link
                 href={href({ view: "table", page: String(result.meta.page - 1) })}
-                className="rounded-md border border-line px-3 py-1.5 hover:bg-wash"
+                className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 hover:bg-wash"
               >
-                â† Prev
+                <ArrowLeftIcon className="h-4 w-4 text-sub" />
+                Prev
               </Link>
             )}
             {result.meta.page < result.meta.totalPages && (
               <Link
                 href={href({ view: "table", page: String(result.meta.page + 1) })}
-                className="rounded-md border border-line px-3 py-1.5 hover:bg-wash"
+                className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-1.5 hover:bg-wash"
               >
-                Next â†’
+                Next
+                <ArrowRightIcon className="h-4 w-4 text-sub" />
               </Link>
             )}
           </div>

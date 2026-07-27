@@ -73,7 +73,7 @@ export function Board({ leads, role, userId, transitions }: BoardProps) {
       const body = await res.json().catch(() => ({}));
       const allowed = body.details?.allowedNextStatuses as string[] | undefined;
       showToast(
-        `${body.error ?? "Move failed"}${allowed?.length ? ` Â· Allowed next: ${allowed.join(", ")}` : ""}`
+        `${body.error ?? "Move failed"}${allowed?.length ? ` · Allowed next: ${allowed.join(", ")}` : ""}`
       );
       return;
     }
@@ -85,6 +85,7 @@ export function Board({ leads, role, userId, transitions }: BoardProps) {
       <div className="flex gap-3 overflow-x-auto pb-4">
         {STATUS_KEYS.map((status) => {
           const meta = STATUS_META[status];
+          const StatusIcon = meta.Icon;
           const columnLeads = items
             .filter((lead) => lead.status === status)
             .sort((a, b) => b.score - a.score);
@@ -109,9 +110,10 @@ export function Board({ leads, role, userId, transitions }: BoardProps) {
               }`}
             >
               <div className="flex items-center justify-between px-3 py-2.5">
-                <span className="text-sm font-medium">
-                  {meta.emoji} {meta.label}
-                  <span className="ml-1.5 text-xs text-faint">{columnLeads.length}</span>
+                <span className="flex items-center gap-1.5 text-sm font-medium">
+                  <StatusIcon className="h-4 w-4 text-sub" />
+                  {meta.label}
+                  <span className="text-xs text-faint">{columnLeads.length}</span>
                 </span>
                 <span className="text-xs text-faint">{columnValue ? formatMoney(columnValue) : ""}</span>
               </div>

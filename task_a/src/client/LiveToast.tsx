@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { BellIcon } from "./icons";
 
 export function LiveToast() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export function LiveToast() {
         const newest = body.data?.[0];
         if (!newest) return;
         if (latestId.current && latestId.current !== newest.id) {
-          setMessage(`✨ New lead just arrived: ${newest.name}`);
+          setMessage(`New lead just arrived: ${newest.name}`);
           if (hideTimer.current) clearTimeout(hideTimer.current);
           hideTimer.current = setTimeout(() => setMessage(""), 6000);
           router.refresh();
@@ -43,7 +44,8 @@ export function LiveToast() {
 
   if (!message) return null;
   return (
-    <div className="fixed right-5 bottom-5 z-50 rounded-md border border-line bg-paper px-4 py-2.5 text-sm shadow-lg">
+    <div className="fixed right-5 bottom-5 z-50 flex items-center gap-2 rounded-md border border-line bg-paper px-4 py-2.5 text-sm shadow-lg">
+      <BellIcon className="h-4 w-4 text-sub" />
       {message}
     </div>
   );

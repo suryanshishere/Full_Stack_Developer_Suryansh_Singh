@@ -1,10 +1,23 @@
-export const STATUS_META: Record<string, { label: string; emoji: string; pill: string }> = {
-  NEW: { label: "New", emoji: "✨", pill: "bg-[#d3e5ef] text-[#183347]" },
-  CONTACTED: { label: "Contacted", emoji: "📞", pill: "bg-[#fdecc8] text-[#402c1b]" },
-  QUALIFIED: { label: "Qualified", emoji: "🎯", pill: "bg-[#e8deee] text-[#412454]" },
-  PROPOSAL: { label: "Proposal", emoji: "📄", pill: "bg-[#fadec9] text-[#49290e]" },
-  WON: { label: "Won", emoji: "🏆", pill: "bg-[#dbeddb] text-[#1c3829]" },
-  LOST: { label: "Lost", emoji: "🗂️", pill: "bg-[#ffe2dd] text-[#5d1715]" },
+import {
+  CircleDotIcon,
+  ClockIcon,
+  DotIcon,
+  FileTextIcon,
+  FlameIcon,
+  type Icon,
+  PhoneIcon,
+  TargetIcon,
+  TrophyIcon,
+  XCircleIcon,
+} from "./icons";
+
+export const STATUS_META: Record<string, { label: string; Icon: Icon; pill: string }> = {
+  NEW: { label: "New", Icon: CircleDotIcon, pill: "bg-[#d3e5ef] text-[#183347]" },
+  CONTACTED: { label: "Contacted", Icon: PhoneIcon, pill: "bg-[#fdecc8] text-[#402c1b]" },
+  QUALIFIED: { label: "Qualified", Icon: TargetIcon, pill: "bg-[#e8deee] text-[#412454]" },
+  PROPOSAL: { label: "Proposal", Icon: FileTextIcon, pill: "bg-[#fadec9] text-[#49290e]" },
+  WON: { label: "Won", Icon: TrophyIcon, pill: "bg-[#dbeddb] text-[#1c3829]" },
+  LOST: { label: "Lost", Icon: XCircleIcon, pill: "bg-[#ffe2dd] text-[#5d1715]" },
 };
 
 export const STATUS_KEYS = ["NEW", "CONTACTED", "QUALIFIED", "PROPOSAL", "WON", "LOST"];
@@ -18,8 +31,14 @@ export const PRIORITY_META: Record<string, { label: string; pill: string }> = {
 const pillBase = "inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-xs font-medium";
 
 export function StatusBadge({ status }: { status: string }) {
-  const meta = STATUS_META[status] ?? { label: status, emoji: "", pill: "bg-wash text-ink" };
-  return <span className={`${pillBase} ${meta.pill}`}>{meta.label}</span>;
+  const meta = STATUS_META[status] ?? { label: status, Icon: DotIcon, pill: "bg-wash text-ink" };
+  const { Icon: StatusIcon } = meta;
+  return (
+    <span className={`${pillBase} ${meta.pill}`}>
+      <StatusIcon className="h-3.5 w-3.5" />
+      {meta.label}
+    </span>
+  );
 }
 
 export function PriorityBadge({ priority }: { priority: string }) {
@@ -34,13 +53,18 @@ export function ScoreChip({ score }: { score: number }) {
       className={`${pillBase} ${hot ? "bg-[#fadec9] text-[#49290e]" : "bg-wash text-sub"}`}
       title="Lead score from value, priority, source, and recency"
     >
-      {hot ? "🔥" : "·"} {score}
+      {hot ? <FlameIcon className="h-3.5 w-3.5" /> : <DotIcon className="h-2.5 w-2.5" />} {score}
     </span>
   );
 }
 
 export function OverdueBadge() {
-  return <span className={`${pillBase} bg-[#ffe2dd] text-[#5d1715]`}>⏰ Overdue</span>;
+  return (
+    <span className={`${pillBase} bg-[#ffe2dd] text-[#5d1715]`}>
+      <ClockIcon className="h-3.5 w-3.5" />
+      Overdue
+    </span>
+  );
 }
 
 export function formatMoney(value: number | null | undefined) {

@@ -46,7 +46,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       const allowed = data.details?.allowedNextStatuses as string[] | undefined;
-      setError(`${data.error ?? "Request failed"}${allowed?.length ? ` Â· Allowed: ${allowed.join(", ")}` : ""}`);
+      setError(`${data.error ?? "Request failed"}${allowed?.length ? ` · Allowed: ${allowed.join(", ")}` : ""}`);
       return false;
     }
     router.refresh();
@@ -76,19 +76,23 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
           <div className="mt-2 flex flex-wrap gap-2">
             {allowedNext.length === 0 && (
               <span className="text-sm text-faint">
-                {role === "ADMIN" ? "No further moves from here." : "This lead is closed â€” only an admin can reopen it."}
+                {role === "ADMIN" ? "No further moves from here." : "This lead is closed — only an admin can reopen it."}
               </span>
             )}
-            {allowedNext.map((status) => (
-              <button
-                key={status}
-                disabled={busy}
-                onClick={() => changeStatus(status)}
-                className="rounded-md border border-line bg-paper px-3 py-1.5 text-sm hover:bg-wash disabled:opacity-50"
-              >
-                {STATUS_META[status]?.emoji} {STATUS_META[status]?.label ?? status}
-              </button>
-            ))}
+            {allowedNext.map((status) => {
+              const StatusIcon = STATUS_META[status]?.Icon;
+              return (
+                <button
+                  key={status}
+                  disabled={busy}
+                  onClick={() => changeStatus(status)}
+                  className="inline-flex items-center gap-1.5 rounded-md border border-line bg-paper px-3 py-1.5 text-sm hover:bg-wash disabled:opacity-50"
+                >
+                  {StatusIcon && <StatusIcon className="h-4 w-4 text-sub" />}
+                  {STATUS_META[status]?.label ?? status}
+                </button>
+              );
+            })}
           </div>
           {askingLostReason && (
             <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -116,7 +120,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
         </section>
       ) : (
         <p className="text-sm text-sub">
-          Viewing only â€” this lead is assigned to {lead.assignedTo?.name ?? "no one"}. Only they or an
+          Viewing only — this lead is assigned to {lead.assignedTo?.name ?? "no one"}. Only they or an
           admin can modify it.
         </p>
       )}
@@ -157,7 +161,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
               </select>
             </label>
             <label className="text-xs text-sub">
-              Deal value (â‚¹)
+              Deal value (₹)
               <input
                 type="number"
                 min={0}
@@ -200,7 +204,7 @@ export function LeadActions({ lead, role, canMutate, allowedNext, users }: LeadA
               value={note}
               onChange={(event) => setNote(event.target.value)}
               rows={2}
-              placeholder="Call summary, next steps, anything the team should knowâ€¦"
+              placeholder="Call summary, next steps, anything the team should know…"
               className={inputClass}
             />
             <button

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCircleIcon } from "./icons";
 
 type FieldErrors = Record<string, string[]>;
 
@@ -42,7 +43,7 @@ export function CaptureForm() {
   if (done) {
     return (
       <div className="rounded-lg border border-line bg-canvas p-8 text-center">
-        <div className="text-3xl">✅</div>
+        <CheckCircleIcon className="mx-auto h-8 w-8 text-sub" strokeWidth={1.5} />
         <h3 className="mt-3 text-lg font-semibold">Thanks — we got it!</h3>
         <p className="mt-1 text-sm text-sub">Our team will reach out within one business day.</p>
         <button

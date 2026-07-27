@@ -6,6 +6,20 @@ import { allowedTransitions } from "@/server/pipeline";
 import type { LeadStatus } from "@/server/http";
 import { LeadActions } from "@/client/LeadActions";
 import {
+  ArrowLeftIcon,
+  ArrowLeftRightIcon,
+  DotIcon,
+  HistoryIcon,
+  type Icon,
+  IdCardIcon,
+  InboxIcon,
+  MessageSquareIcon,
+  NoteIcon,
+  PencilIcon,
+  UserIcon,
+  UserMinusIcon,
+} from "@/client/icons";
+import {
   OverdueBadge,
   PriorityBadge,
   ScoreChip,
@@ -26,35 +40,35 @@ type ActivityRow = {
   actor: { id: string; name: string } | null;
 };
 
-function activityLine(activity: ActivityRow) {
+function activityLine(activity: ActivityRow): { Icon: Icon; text: string } {
   const meta = activity.meta as Record<string, string | string[] | null | undefined>;
   switch (activity.type) {
     case "LEAD_CREATED":
       return {
-        icon: "✨",
+        Icon: InboxIcon,
         text:
           meta.source === "WEB_FORM"
             ? "captured this lead from the website form"
             : `created this lead (${String(meta.source ?? "manual").toLowerCase()})`,
       };
     case "ASSIGNED":
-      return { icon: "👤", text: `assigned this lead to ${meta.toUserName ?? "a teammate"}` };
+      return { Icon: UserIcon, text: `assigned this lead to ${meta.toUserName ?? "a teammate"}` };
     case "UNASSIGNED":
-      return { icon: "🚫", text: "unassigned this lead" };
+      return { Icon: UserMinusIcon, text: "unassigned this lead" };
     case "STATUS_CHANGED":
       return {
-        icon: "🔁",
+        Icon: ArrowLeftRightIcon,
         text: `moved ${meta.from} → ${meta.to}${meta.lostReason ? ` · “${meta.lostReason}”` : ""}`,
       };
     case "NOTE_ADDED":
-      return { icon: "📝", text: "added a note" };
+      return { Icon: NoteIcon, text: "added a note" };
     case "LEAD_UPDATED":
       return {
-        icon: "✏️",
+        Icon: PencilIcon,
         text: `updated ${Array.isArray(meta.changed) ? meta.changed.join(", ") : "properties"}`,
       };
     default:
-      return { icon: "•", text: activity.type.toLowerCase() };
+      return { Icon: DotIcon, text: activity.type.toLowerCase() };
   }
 }
 
@@ -104,12 +118,16 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Link href="/dashboard" className="text-sm text-sub hover:text-ink">
-        ← Leads
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-1.5 text-sm text-sub hover:text-ink"
+      >
+        <ArrowLeftIcon className="h-4 w-4" />
+        Leads
       </Link>
 
       <div className="mt-4">
-        <div className="text-4xl">📇</div>
+        <IdCardIcon className="h-9 w-9 text-sub" strokeWidth={1.5} />
         <h1 className="mt-2 text-3xl font-bold">{lead.name}</h1>
         {lead.company && <p className="mt-1 text-sub">{lead.company}</p>}
         {lead.status === "LOST" && lead.lostReason && (
@@ -127,8 +145,9 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
       </dl>
 
       {lead.message && (
-        <blockquote className="mt-5 rounded-lg border border-line bg-canvas p-4 text-sm text-ink">
-          💬 “{lead.message}”
+        <blockquote className="mt-5 flex gap-2.5 rounded-lg border border-line bg-canvas p-4 text-sm text-ink">
+          <MessageSquareIcon className="mt-0.5 h-4 w-4 text-faint" />
+          <span>“{lead.message}”</span>
         </blockquote>
       )}
 
@@ -150,7 +169,10 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
       </div>
 
       <section className="mt-8">
-        <h2 className="text-lg font-semibold">📝 Notes</h2>
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <NoteIcon className="h-5 w-5 text-sub" strokeWidth={1.5} />
+          Notes
+        </h2>
         <div className="mt-3 space-y-3">
           {lead.notes.length === 0 && <p className="text-sm text-faint">No notes yet.</p>}
           {lead.notes.map((note) => (
@@ -165,21 +187,24 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
       </section>
 
       <section className="mt-8 mb-4">
-        <h2 className="text-lg font-semibold">🧾 Activity</h2>
+        <h2 className="flex items-center gap-2 text-lg font-semibold">
+          <HistoryIcon className="h-5 w-5 text-sub" strokeWidth={1.5} />
+          Activity
+        </h2>
         <ol className="mt-3 space-y-0">
           {activities.map((activity, index) => {
-            const line = activityLine(activity);
+            const { Icon: ActivityIcon, text } = activityLine(activity);
             return (
               <li key={activity.id} className="relative flex gap-3 pb-4">
                 {index < activities.length - 1 && (
                   <span className="absolute top-6 left-[11px] h-full w-px bg-line" />
                 )}
-                <span className="z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line bg-paper text-xs">
-                  {line.icon}
+                <span className="z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line bg-paper text-sub">
+                  <ActivityIcon className="h-3.5 w-3.5" />
                 </span>
                 <div className="text-sm">
                   <span className="font-medium">{activity.actor?.name ?? "Website visitor"}</span>{" "}
-                  <span className="text-sub">{line.text}</span>
+                  <span className="text-sub">{text}</span>
                   <span className="ml-2 text-xs text-faint">{timeAgo(activity.createdAt)}</span>
                 </div>
               </li>

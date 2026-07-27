@@ -1,4 +1,4 @@
-# ⚡ Leadline
+# Leadline
 
 A lead management platform for a small sales team — public capture form, role-based team app,
 pipeline board, and a documented JSON API.
